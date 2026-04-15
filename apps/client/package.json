@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@casl/react": "^5.0.1",
+    "@cyntler/react-doc-viewer": "^1.17.1",
     "@docmost/editor-ext": "workspace:*",
     "@emoji-mart/data": "^1.2.1",
     "@emoji-mart/react": "^1.1.1",

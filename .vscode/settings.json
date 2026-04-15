@@ -1,0 +1,10 @@
+{
+    "editor.fontFamily": "'Cascadia Code', Consolas, 'Courier New', monospace",
+    "editor.fontLigatures": "'ss01', 'ss02', 'ss03', 'ss19', 'ss20'",
+    "editor.fontSize": 16,
+    "editor.linkedEditing": true,
+    "workbench.colorCustomizations": {
+        "sideBar.background": "#303030",
+        "sideBar.foreground": "#ffffff"
+    }
+}

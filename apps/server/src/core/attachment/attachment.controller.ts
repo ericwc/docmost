@@ -20,7 +20,7 @@ import {
 import { AttachmentService } from './services/attachment.service';
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { FileInterceptor } from '../../common/interceptors/file.interceptor';
-import * as bytes from 'bytes';
+import bytes from 'bytes';
 import { AuthUser } from '../../common/decorators/auth-user.decorator';
 import { AuthWorkspace } from '../../common/decorators/auth-workspace.decorator';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
@@ -76,7 +76,7 @@ export class AttachmentController {
     private readonly tokenService: TokenService,
     private readonly pageAccessService: PageAccessService,
     @Inject(AUDIT_SERVICE) private readonly auditService: IAuditService,
-  ) {}
+  ) { }
 
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
@@ -445,6 +445,46 @@ export class AttachmentController {
       await this.attachmentService.removeWorkspaceIcon(workspace);
       return;
     }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  @Post('attachments/generate-token')
+  async generateAttachmentToken(
+    @Body() dto: { attachmentId: string; pageId: string },
+    @AuthUser() user: User,
+    @AuthWorkspace() workspace: Workspace,
+  ) {
+    const { attachmentId, pageId } = dto;
+
+    if (!isValidUUID(attachmentId) || !isValidUUID(pageId)) {
+      throw new BadRequestException('Invalid attachment or page id');
+    }
+
+    const attachment = await this.attachmentRepo.findById(attachmentId);
+    if (
+      !attachment ||
+      attachment.workspaceId !== workspace.id ||
+      attachment.pageId !== pageId
+    ) {
+      throw new NotFoundException('Attachment not found');
+    }
+
+    const spaceAbility = await this.spaceAbility.createForUser(
+      user,
+      attachment.spaceId,
+    );
+    if (spaceAbility.cannot(SpaceCaslAction.Read, SpaceCaslSubject.Page)) {
+      throw new ForbiddenException();
+    }
+
+    const token = await this.tokenService.generateAttachmentToken({
+      attachmentId,
+      pageId,
+      workspaceId: workspace.id,
+    });
+
+    return { token };
   }
 
   private async sendFileResponse(

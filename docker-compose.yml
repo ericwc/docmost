@@ -1,14 +1,53 @@
 services:
+  traefik:
+      image: traefik:v3.6
+      profiles: ["production"]
+      command:
+        - "--api.insecure=true"
+        - "--providers.docker=true"
+        - "--providers.docker.exposedbydefault=false"
+        - "--providers.file.directory=/dynamic"
+        - "--entrypoints.web.address=:80"
+        - "--entrypoints.websecure.address=:443"
+        - "--log.level=INFO"                        
+        - "--log.filePath=/var/log/traefik/traefik.log" 
+        - "--log.format=json"                       
+        - "--accesslog=true"                          
+        - "--accesslog.filePath=/var/log/traefik/access.log" 
+        - "--accesslog.format=json"                    
+        - "--accesslog.bufferingSize=100"             
+        - "--accesslog.fields.defaultMode=keep"        
+        - "--accesslog.fields.names.ClientUsername=drop" 
+        - "--accesslog.fields.headers.defaultMode=keep"   
+        - "--accesslog.fields.headers.names.User-Agent=redact"
+      ports:
+        - "80:80"
+        - "443:443"
+        - "8080:8080"
+      volumes:
+        - /var/run/docker.sock:/var/run/docker.sock:ro
+        - ./logs:/var/log/traefik
+        - ./certs:/certs:ro
+        - ./dynamic:/dynamic:ro
+      restart: unless-stopped
   docmost:
-    image: docmost/docmost:latest
+    build: .
     depends_on:
       - db
       - redis
     environment:
-      APP_URL: 'http://localhost:3000'
-      APP_SECRET: 'REPLACE_WITH_LONG_SECRET'
-      DATABASE_URL: 'postgresql://docmost:STRONG_DB_PASSWORD@db:5432/docmost'
+      APP_URL: ${APP_URL}
+      APP_SECRET: ${APP_SECRET_DEV}
+      DATABASE_URL: 'postgresql://docmost:${DATABASE_PASSWORD}@db:5432/docmost'
       REDIS_URL: 'redis://redis:6379'
+      FILE_UPLOAD_SIZE_LIMIT: 1024mb
+      FILE_IMPORT_SIZE_LIMIT: 1024mb
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.docmost.rule=Host(`${APP_HOST}`)"
+      - "traefik.http.routers.docmost.entrypoints=websecure"
+      - "traefik.http.routers.docmost.tls=true"
+      - "traefik.http.services.docmost.loadbalancer.server.port=3000"
     ports:
       - "3000:3000"
     restart: unless-stopped
@@ -20,10 +59,12 @@ services:
     environment:
       POSTGRES_DB: docmost
       POSTGRES_USER: docmost
-      POSTGRES_PASSWORD: STRONG_DB_PASSWORD
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
     restart: unless-stopped
     volumes:
       - db_data:/var/lib/postgresql
+    ports:
+      - "5432:5432"
 
   redis:
     image: redis:8
@@ -31,6 +72,8 @@ services:
     restart: unless-stopped
     volumes:
       - redis_data:/data
+    ports:
+      - "6379:6379"
 
 volumes:
   docmost:

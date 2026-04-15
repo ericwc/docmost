@@ -4,6 +4,7 @@ import {
   AvatarIconType,
   IAttachment,
 } from "@/features/attachments/types/attachment.types.ts";
+import { getBackendUrl } from '@/lib/config';
 
 async function compressAndResizeIcon(
   file: File,
@@ -103,4 +104,31 @@ export async function removeSpaceIcon(spaceId: string): Promise<void> {
 
 export async function removeWorkspaceIcon(): Promise<void> {
   await removeIcon(AvatarIconType.WORKSPACE_ICON);
+}
+
+export async function getPublicFileUrl(src: string, pageId: string): Promise<string> {
+  if (!src || !pageId) return src;
+  if (src.startsWith("http")) return src;
+
+  const match = src.match(/\/files\/([a-f0-9\-]+)\//);
+  if (!match) return src;
+
+  const attachmentId = match[1];
+
+  try {
+    const response = await api.post("/attachments/generate-token", {
+      attachmentId,
+      pageId,
+    });
+    const token = response.data.token;
+
+    const updatedSrc = src.startsWith('/api/files/')
+      ? src.replace('/api/files/', '/files/public/')
+      : src.replace('/files/', '/files/public/');
+    const separator = updatedSrc.includes('?') ? '&' : '?';
+    return `${getBackendUrl()}${updatedSrc}${separator}jwt=${token}`;
+  } catch (err) {
+    console.error("Failed to generate public file URL", err);
+    return src;
+  }
 }
