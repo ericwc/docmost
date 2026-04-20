@@ -339,6 +339,14 @@ const CommandGroups: SlashMenuGroupedItemsType = {
           .run(),
     },
     {
+      title: "Spreadsheet",
+      description: "Insert a spreadsheet.",
+      searchTerms: ["spreadsheet", "sheet", "excel", "grid", "cells"],
+      icon: IconTable,
+      command: ({ editor, range }: CommandProps) =>
+        editor.chain().focus().deleteRange(range).insertSpreadsheet().run(),
+    },
+    {
       title: "Toggle block",
       description: "Insert collapsible block.",
       searchTerms: ["collapsible", "block", "toggle", "details", "expand"],

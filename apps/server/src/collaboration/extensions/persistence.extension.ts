@@ -45,7 +45,7 @@ export class PersistenceExtension implements Extension {
     @InjectQueue(QueueName.HISTORY_QUEUE) private historyQueue: Queue,
     @InjectQueue(QueueName.NOTIFICATION_QUEUE) private notificationQueue: Queue,
     private readonly collabHistory: CollabHistoryService,
-  ) {}
+  ) { }
 
   async onLoadDocument(data: onLoadDocumentPayload) {
     const { documentName, document } = data;
@@ -125,10 +125,10 @@ export class PersistenceExtension implements Extension {
           return;
         }
 
-        if (isDeepStrictEqual(tiptapJson, page.content)) {
-          page = null;
-          return;
-        }
+        // if (isDeepStrictEqual(tiptapJson, page.content)) {
+        //   page = null;
+        //   return;
+        // }
 
         let contributorIds = undefined;
         try {

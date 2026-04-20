@@ -38,6 +38,7 @@ import {
   Columns,
   Column,
   Status,
+  Spreadsheet,
   addUniqueIdsToDoc,
   htmlToMarkdown,
 } from '@docmost/editor-ext';
@@ -101,6 +102,7 @@ export const tiptapExtensions = [
   Columns,
   Column,
   Status,
+  Spreadsheet,
 ] as any;
 
 export function jsonToHtml(tiptapJson: any) {

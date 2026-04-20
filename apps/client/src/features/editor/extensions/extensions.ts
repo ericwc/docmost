@@ -28,6 +28,7 @@ import {
   CustomTable,
   TrailingNode,
   TiptapImage,
+  Spreadsheet,
   Callout,
   TiptapVideo,
   TiptapAudio,
@@ -75,6 +76,7 @@ import AttachmentView from "@/features/editor/components/attachment/attachment-v
 import CodeBlockView from "@/features/editor/components/code-block/code-block-view.tsx";
 import DrawioView from "../components/drawio/drawio-view";
 import ExcalidrawView from "@/features/editor/components/excalidraw/excalidraw-view.tsx";
+import { SpreadsheetView } from "@/features/editor/components/spreadsheet/spreadsheet-view";
 import EmbedView from "@/features/editor/components/embed/embed-view.tsx";
 import PdfView from "@/features/editor/components/pdf/pdf-view.tsx";
 import SubpagesView from "@/features/editor/components/subpages/subpages-view.tsx";
@@ -304,6 +306,9 @@ export const mainExtensions = [
       createCustomHandle: createResizeHandle,
       className: buildResizeClasses("node-drawio"),
     },
+  }),
+  Spreadsheet.configure({
+    view: SpreadsheetView,
   }),
   Excalidraw.configure({
     view: ExcalidrawView,

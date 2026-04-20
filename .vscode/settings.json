@@ -1,7 +1,14 @@
 {
+    "chat.fontFamily": "'SF Mono', 'Cascadia Code', 'Courier New', monospace",
+    "editor.foldingStrategy": "auto",
+    "editor.showFoldingControls": "always",
+    "editor.foldingMaximumRegions": 5000,
+    "editor.foldingHighlight": true,
     "editor.fontFamily": "'Cascadia Code', Consolas, 'Courier New', monospace",
     "editor.fontLigatures": "'ss01', 'ss02', 'ss03', 'ss19', 'ss20'",
     "editor.fontSize": 16,
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
     "editor.linkedEditing": true,
     "workbench.colorCustomizations": {
         "sideBar.background": "#303030",

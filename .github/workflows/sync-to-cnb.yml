@@ -5,18 +5,22 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Sync to CNB Repository
+      - name: Push to CNB
         run: |
-          docker run --rm \
-            -v ${{ github.workspace }}:${{ github.workspace }} \
-            -w ${{ github.workspace }} \
-            -e PLUGIN_TARGET_URL="https://cnb.cool/weicshine/docmost.git" \
-            -e PLUGIN_AUTH_TYPE="https" \
-            -e PLUGIN_USERNAME="cnb" \
-            -e PLUGIN_PASSWORD=${{ secrets.CNB_TOKEN }} \
-            -e PLUGIN_FORCE="true" \
-            tencentcom/git-sync
+          CNB_URL="https://cnb:${{ secrets.CNB_TOKEN }}@cnb.cool/weicshine/docmost.git"
+
+          git remote remove cnb 2>/dev/null || true
+          git remote add cnb "$CNB_URL"
+
+          echo "== remotes =="
+          git remote -v
+
+          echo "== test access =="
+          git ls-remote cnb
+
+          git push cnb --all
+          git push cnb --tags
