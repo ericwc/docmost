@@ -31,6 +31,7 @@ export const Spreadsheet = Node.create<SpreadsheetOptions>({
   group: "block",
   atom: true,
   isolating: true,
+  draggable: true,
 
   addOptions() {
     return {
@@ -92,12 +93,12 @@ export const Spreadsheet = Node.create<SpreadsheetOptions>({
     return {
       insertSpreadsheet:
         (attributes) =>
-        ({ commands }) => {
-          return commands.insertContent({
-            type: this.name,
-            attrs: attributes,
-          });
-        },
+          ({ commands }) => {
+            return commands.insertContent({
+              type: this.name,
+              attrs: attributes,
+            });
+          },
     };
   },
 

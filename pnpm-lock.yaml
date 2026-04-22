@@ -354,6 +354,9 @@ importers:
       mitt:
         specifier: ^3.0.1
         version: 3.0.1
+      pako:
+        specifier: ^2.1.0
+        version: 2.1.0
       pnpm:
         specifier: ^10.33.0
         version: 10.33.0
@@ -421,6 +424,9 @@ importers:
       '@types/node':
         specifier: 22.19.1
         version: 22.19.1
+      '@types/pako':
+        specifier: ^2.0.4
+        version: 2.0.4
       '@types/react':
         specifier: ^18.3.12
         version: 18.3.12
@@ -5290,6 +5296,9 @@ packages:
 
   '@types/oauth@0.9.6':
     resolution: {integrity: sha512-H9TRCVKBNOhZZmyHLqFt9drPM9l+ShWiqqJijU1B8P3DX3ub84NjxDuy+Hjrz+fEca5Kwip3qPMKNyiLgNJtIA==}
+
+  '@types/pako@2.0.4':
+    resolution: {integrity: sha512-VWDCbrLeVXJM9fihYodcLiIv0ku+AlOa/TQ1SvYOaBuyrSKgEcro95LJyIsJ4vSo6BXIxOKxiJAat04CmST9Fw==}
 
   '@types/papaparse@5.5.2':
     resolution: {integrity: sha512-gFnFp/JMzLHCwRf7tQHrNnfhN4eYBVYYI897CGX4MY1tzY9l2aLkVyx2IlKZ/SAqDbB3I1AOZW5gTMGGsqWliA==}
@@ -16836,6 +16845,8 @@ snapshots:
   '@types/oauth@0.9.6':
     dependencies:
       '@types/node': 25.5.0
+
+  '@types/pako@2.0.4': {}
 
   '@types/papaparse@5.5.2':
     dependencies:
